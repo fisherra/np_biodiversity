@@ -4,14 +4,10 @@ Conducted by Fisher Anney
 January 11th, 2018 - present
 
 Ideas - - - 
-
-write biodiversity counts to new input.csv files
-
-Plot National Parks where color / size = biodiversity levels
-
-Scatterplot total biodiversity vs square acres 
-
-
+Write report up in R markdown and publish
+- kaggle
+- github
+- my website
 
 
 
@@ -19,6 +15,5 @@ future analysis - - -
 fish analysis
 mammal analysis
 bird analysis
-relationship between vascular plants & animals
 ...
 
