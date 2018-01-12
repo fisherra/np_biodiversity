@@ -60,4 +60,3 @@ ggplot(animal_biodiv) +
        x = "National Park",
        y = "Number of Species"
   ) + coord_flip()
-
