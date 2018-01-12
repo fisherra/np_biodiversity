@@ -5,11 +5,11 @@ January 11th, 2018 - present
 
 Ideas - - - 
 
-Diverging bars graph of
-- vascular plant biodiversity
-- mammal biodiversity
-- fish biodiversity
-- bird biodiversity
+write biodiversity counts to new input.csv files
+
+Plot National Parks where color / size = biodiversity levels
+
+Scatterplot total biodiversity vs square acres 
 
 
 
