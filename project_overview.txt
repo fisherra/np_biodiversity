@@ -5,16 +5,12 @@ January 11th, 2018 - present
 
 Ideas - - - 
 
-plot the national parks on a map of the United States
-- size of point = acreage 
-- color of point = general biodiversity 
+Diverging bars graph of
+- vascular plant biodiversity
+- mammal biodiversity
+- fish biodiversity
+- bird biodiversity
 
-states with the most national parks
-
-ranked animal biodiversity of each park
-- states with the most combined biodiversity within their parks?
-
-mammals that are unique to a single national park 
 
 
 

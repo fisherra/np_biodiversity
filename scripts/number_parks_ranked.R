@@ -1,64 +1,42 @@
-###############################################
-##  Biodiversity in the U.S. National Parks  ##
-###############################################
+##########################################
+##  Number of National Parks per State  ##
+##########################################
 
 # Fisher Ankney
 # January 11 2018
 
 # Install packages
 library('tidyverse')
-library('RColorBrewer')
 
 # Import dataset
 setwd('../np_biodiversity')
 parks <- read_csv('../input/parks.csv')
 species <- read_csv('../input/species.csv')
 
-# lets take a quick look at the parks 
-parks_mapped <- parks %>%
-  ggplot(aes(Longitude, Latitude)) +
-  borders("state") +
-  geom_point(aes(size=Acres)) +
-  coord_quickmap()
-parks_mapped
-  
-ggsave('parks_mapped.png')
-
-# better map
-lower_48_mapped <- parks %>% 
-  filter(State != "AK" & State != "HI") %>% 
-  ggplot(aes(Longitude, Latitude)) +
-  borders("state") +
-  geom_point(
-             aes(
-                 size=Acres, 
-                 color=Acres
-                 )
-             ) +
-  coord_quickmap() +   
-labs(title="U.S. National Parks",               
-     subtitle="Size and Location",
-     caption="Source: Kaggle biodiversity dataset"
-     ) + 
-scale_size_continuous(
-  range=c(3,9),
-  guide=FALSE) + 
-        #                name = "Acres",
-        #                breaks=c(1e+06, 2e+06, 3e+06, 4e+06),
-        #                labels=c("1 Million", "2 Million", "3 Million", "4 Million")) + 
-scale_colour_distiller(name = "Square Acres",
-                          breaks=c(1e+06, 2e+06, 3e+06, 4e+06),
-                          labels=c("1 Million", "2 Million", "3 Million", "4 Million"),
-                          palette="Spectral")  
-lower_48_mapped
-
-ggsave('lower_48_mapped.png')
+# Create a table of number of national parks per state:
+parks_by_state <- parks %>%
+  group_by(State) %>%
+  summarise(num_of_parks = n()) %>% 
+  arrange(desc(num_of_parks)) %>%
+  ungroup(parks_by_state)
+View(parks_by_state)
 
 
-## states with the most national parks
+# Create a graph to show the same: 
+ggplot(parks_by_state) + 
+  geom_bar(aes(fct_reorder(State, num_of_parks), num_of_parks),
+           stat="identity",
+           width = 0.8,                      
+           color = "black",                   
+           fill = "darkgreen",             
+           alpha = 0.8                       
+           ) +
+  labs(title="National Parks",                          
+       subtitle="States Ranked by Number of National Parks", 
+       caption="Kaggle biodiversity datset", 
+       y = "Number of National Parks",
+       x = "State"
+  ) + 
+  coord_flip()
 
-# ranked animal biodiversity of each park
-# - states with the most combined biodiversity within their parks?
-
-# mammals that are unique to a single national park 
-
+ggsave("number_parks_ranked.png")
