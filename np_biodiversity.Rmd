@@ -1,8 +1,8 @@
 ---
-title: "Biodiversity in U.S. National Parks for Github"
+title: "Biodiversity in U.S. National Parks"
 author: "Fisher Ankney"
 date: "January 18, 2018"
-output: github_document
+output: html_document
 ---
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
