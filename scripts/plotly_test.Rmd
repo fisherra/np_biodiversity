@@ -5,11 +5,13 @@ date: "2/23/2018"
 output: html_document
 ---
 
-This is an easy-to-access reference page for plotly, an interactive data visualization package in R. Most of these plots are directly copied from the free online book, [plotly for R](https://plotly-book.cpsievert.me/index.html), by Carson Sievert. Possible to use plotly in just R, dont have to connect it to an account online, simply follow the first step in Plot.ly setup. If you want to connect your account online, more tools for analysis, and sharing. Limits apply to free accounts though, like 25 plots in the server maximum. Cookbook section isn't as inclusive as the online text book, i just kept stuff i think would be useful / interesting to me. 
+Plotly is an open source, interactive, data visualization tool that interfaces R, Matab, and Python with web based Javascript graphics. Build for collaboration, plotly offers online servers and support with both free and paid subscription plans. In this post I dive in to setting up an online plotly account within RStudio, and I create a variety of visualizations showcasing plotly's abilities. The visualization examples are inspired by, and in some cases directly copied from the ebook [Plotly for R](https://plotly-book.cpsievert.me/index.html) by Carson Sievert. Carson is an interactive data visualization powerhouse, the mastermind behind plotly, and one of my data science heros. 
+
+Plotly supports both online and offline functionality. If wish to forgo the tools and collaborative web support provided at <https://plot.ly/feed/>, simply install the package by following step 1 of the setup guide below. Plotly is still extremely useful without the online tools, this R Markdown document has been created entirely in RStudio. If you want access to the additional web features, follow the entire setup guide. 
 
 <br  /> 
 
-## Setup
+### Setup
 
 1. Install and load plotly package in R
 ```{r, eval=FALSE}
@@ -17,42 +19,49 @@ install.packages('plotly')
 library('plotly')
 ```
 
-2. Create an online account - <https://plot.ly/feed/> 
+2. Create an online account - <https://plot.ly> 
 
-3. Set credentials in R 
+3. Find your credentials on Plot.ly (Settings > API Keys > Regenerate Key)
+
+4. Set your credentials in R 
 ```{r, eval=FALSE}
 Sys.setenv("plotly_username"="username-goes-here")
 Sys.setenv("plotly_api_key"="api-key-goes-here")
 ```
 
-4. Create a plotly test object
+5. Create a plotly object to test
 ```{r eval=FALSE}
 p <- plot_ly(midwest, x = ~percollege, color = ~state, type = "box")
 ```
 
-5. Push test object to plot.ly servers
+6. Push test object to Plot.ly servers
 ```{r eval=FALSE}
 api_create(p, filename = "midwest-boxplots")
 ```
 
 <br  /> 
-<br  /> 
 
-## 2D Scatterplot 
+It's that easy! Whenever you want to push an object to Plot.ly use the `api_create()` function. I highly encourage you at least take a look a the online platform, it's really fun and easy to use. Here are some of my favorite examples of Plotly in R. 
+
+<br  /> 
 
 ```{r echo=FALSE, message=FALSE}
 library('plotly')
 ```
 
+### 2D Scatterplot 
+
 ```{r, message=FALSE}
 subplot(
   plot_ly(mpg, x = ~cty, y = ~hwy, showlegend=FALSE) %>%
-    add_markers(color = ~cyl), 
+    add_markers(alpha = 0.6,
+                size = ~cyl,
+                sizes = c(30,50),
+                color = ~cyl), 
   plot_ly(mpg, x = ~cty, y = ~hwy) %>%
     add_markers(alpha = 0.6,
                 symbol = ~factor(cyl),
-                size = ~cyl,
-                sizes = c(5,20),
+                symbols = c(0,1,5,10),
                 color = ~factor(cyl)
                 )
 ) 
@@ -60,19 +69,21 @@ subplot(
 
 <br  /> 
 
-## 3D Scatterplot
+### 3D Scatterplot
 
 ```{r}
 col1 <- colorRamp(c("red", "blue"))
 
 plot_ly(mpg, x = ~cty, y = ~hwy, z = ~cyl) %>%
-  add_markers(color = ~cyl, colors = col1)
+  add_markers(color = ~cyl,
+              colors = col1
+              )
 ```
 
 <br  />
 
-## Line Plot 
-```{r, echo=FALSE, message=FALSE}
+### Line Plot 
+```{r, message=FALSE}
 library(dplyr)
 top5 <- txhousing %>%
   group_by(city) %>%
@@ -84,52 +95,68 @@ line_ex <- semi_join(txhousing, top5, by = "city")
 
 ```{r}
 col2 <- "Pastel2"
+
 plot_ly(line_ex, x = ~date, y = ~median) %>%
-  add_lines(color = ~city, colors = col2, linetype = ~city)
+  add_lines(color = ~city,
+            colors = col2,
+            linetype = ~city
+            )
 ```
 
 <br  /> 
 
-## Hex Plot 
+### Hex Plot 
 
 ```{r, message=FALSE, warning=FALSE}
 p <- ggplot(txhousing, aes(date, median)) +
   geom_line(aes(group = city), alpha = 0.2)
 
 subplot(p, 
-  ggplot(txhousing, aes(date, median)) + geom_hex(), 
-  shareX = TRUE, shareY = TRUE
+  ggplot(txhousing, aes(date, median)) + 
+    geom_hex(), 
+    shareX = TRUE,
+    shareY = TRUE
 )
 ```
 
 <br  /> 
 
-## Density Plot
+### Density Plot
+
 ```{r}
 kerns <- c("gaussian", "epanechnikov", "rectangular", 
           "triangular", "biweight", "cosine", "optcosine")
+
 p <- plot_ly()
+
 for (k in kerns) {
   d <- density(txhousing$median, kernel = k, na.rm = TRUE)
   p <- add_lines(p, x = d$x, y = d$y, name = k)
 }
+
 layout(p, xaxis = list(title = "Median monthly price"))
 ```
 
 <br  /> 
 
-## Histogram
+### Histogram
 ```{r}
-p1 <- plot_ly(diamonds, x = ~price) %>% add_histogram(name = "plotly.js")
+p1 <- plot_ly(diamonds, x = ~price) %>% 
+  add_histogram(name = "plotly.js")
 
 price_hist <- function(method = "FD") {
   h <- hist(diamonds$price, breaks = method, plot = FALSE)
-  plot_ly(x = h$mids, y = h$counts) %>% add_bars(name = method)
+  plot_ly(x = h$mids, y = h$counts) %>% 
+    add_bars(name = method)
 }
 
 subplot(
-  p1, price_hist(), price_hist("Sturges"),  price_hist("Scott"),
-  nrows = 4, shareX = TRUE
+  p1, 
+  price_hist(),
+  price_hist("Sturges"),
+  price_hist("Scott"),
+  nrows = 4, 
+  shareX = TRUE
 )
 ```
 
@@ -137,7 +164,8 @@ subplot(
 
 ## Bar Chart
 ```{r}
-p1 <- plot_ly(diamonds, x = ~cut) %>% add_histogram()
+p1 <- plot_ly(diamonds, x = ~cut) %>% 
+  add_histogram()
 
 p2 <- diamonds %>%
   dplyr::count(cut) %>%
@@ -149,7 +177,7 @@ subplot(p1, p2)
 
 <br  /> 
 
-## Box Plot 
+### Box Plot 
 
 ```{r}
 d <- diamonds %>%
@@ -164,22 +192,35 @@ lvls <- d %>%
 
 plot_ly(d, x = ~price, y = ~factor(cc, lvls)) %>%
   add_boxplot(color = ~clarity) %>%
-  layout(yaxis = list(title = ""), margin = list(l = 100))
+  layout(yaxis = list(title = ""), 
+         margin = list(l = 100)
+         )
 ```
 
 <br  /> 
 
-## Surface Plot 
+### Surface Plot 
 ```{r}
 x <- seq_len(nrow(volcano)) + 100
 y <- seq_len(ncol(volcano)) + 500
-plot_ly() %>% add_surface(x = ~x, y = ~y, z = ~volcano)
+
+plot_ly() %>% 
+  add_surface(x = ~x, y = ~y, z = ~volcano)
 ```
 
 <br  /> 
 
+### Conclusion 
+
+As you can see plotly is a powerful visualization tool that can create superb graphics in just a few lines of code. I haven't even touched on the amazing geospatial visualizations that plotly can make, it's truely *world* class. I'm not big into data visualiation but I'm certain that plotly will come in handy many times in the future. Not to mention just how fun it is to use!
+
+#### Further Learning Resources
+- https://plotly-book.cpsievert.me/index.html
+- https://help.plot.ly/tutorials/
+- https://www.datacamp.com/community/open-courses/plotly-tutorial-plotly-and-r
+- https://cran.r-project.org/web/packages/plotly/plotly.pdf
 
 
-
-
+Until next time, <br  /> 
+\- Fisher
 
