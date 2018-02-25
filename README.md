@@ -1,4 +1,4 @@
-Biodiversity in U.S. National Parks for Github
+Biodiversity in U.S. National Parks
 ================
 Fisher Ankney
 January 18, 2018

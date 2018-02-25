@@ -2,7 +2,7 @@
 title: "Biodiversity in U.S. National Parks"
 author: "Fisher Ankney"
 date: "January 18, 2018"
-output: html_document
+output: md_document
 ---
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
