@@ -1,5 +1,5 @@
 ---
-title: "Plotly for R Cookbook"
+title: "Plotly Example Cookbook"
 author: "Fisher Ankney"
 date: "2/23/2018"
 output: html_document
@@ -9,7 +9,7 @@ This is an easy-to-access reference page for plotly, an interactive data visuali
 
 <br  /> 
 
-### Plot.ly Setup
+## Setup
 
 1. Install and load plotly package in R
 ```{r, eval=FALSE}
@@ -38,87 +38,145 @@ api_create(p, filename = "midwest-boxplots")
 <br  /> 
 <br  /> 
 
-### Scatterplots 
-
-<br  /> 
+## 2D Scatterplot 
 
 ```{r echo=FALSE, message=FALSE}
 library('plotly')
 ```
 
-#### Custom Markers
 ```{r, message=FALSE}
 subplot(
-  plot_ly(mpg, x = ~cty, y = ~hwy, name = "Default"), 
+  plot_ly(mpg, x = ~cty, y = ~hwy, showlegend=FALSE) %>%
+    add_markers(color = ~cyl), 
   plot_ly(mpg, x = ~cty, y = ~hwy) %>%
-    add_markers(alpha = 0.4,
+    add_markers(alpha = 0.6,
                 symbol = ~factor(cyl),
                 size = ~cyl,
                 sizes = c(5,20),
-                color = ~factor(cyl),
-                colors = c(`4` = "black", `5` = "blue", `6` = "purple", `8` = "red")
+                color = ~factor(cyl)
                 )
 ) 
 ```
 
 <br  /> 
 
-#### Continuous Colors 
-```{r, message=FALSE}
-plot_ly(mpg, x = ~cty, y = ~hwy, alpha = 0.5) %>%
-  add_markers(color = ~cyl, showlegend = FALSE)
-```
+## 3D Scatterplot
 
-<br  /> 
-
-#### Discrete Colors
-```{r}  
-plot_ly(mpg, x = ~cty, y = ~hwy, alpha = 0.5) %>%
-  add_markers(color = ~factor(cyl)) 
-```
-
-<br  /> 
-
-#### Custom Colors 
 ```{r}
-col1 <- "Pastel1"
-col2 <- colorRamp(c("red", "blue"))
-col3 <- c(`4` = "red", `5` = "black", `6` = "blue", `8` = "green")
+col1 <- colorRamp(c("red", "blue"))
 
-p <- plot_ly(mpg, x = ~cty, y = ~hwy, alpha = 0.5)
+plot_ly(mpg, x = ~cty, y = ~hwy, z = ~cyl) %>%
+  add_markers(color = ~cyl, colors = col1)
+```
 
-subplot(
-  add_markers(p, color = ~factor(cyl), colors = col1),
-  add_markers(p, color = ~factor(cyl), colors = col2),
-  add_markers(p, color = ~factor(cyl), colors = col3)
+<br  />
+
+## Line Plot 
+```{r, echo=FALSE, message=FALSE}
+library(dplyr)
+top5 <- txhousing %>%
+  group_by(city) %>%
+  summarise(m = mean(sales, na.rm = TRUE)) %>%
+  arrange(desc(m)) %>%
+  top_n(5)
+line_ex <- semi_join(txhousing, top5, by = "city")
+```
+
+```{r}
+col2 <- "Pastel2"
+plot_ly(line_ex, x = ~date, y = ~median) %>%
+  add_lines(color = ~city, colors = col2, linetype = ~city)
+```
+
+<br  /> 
+
+## Hex Plot 
+
+```{r, message=FALSE, warning=FALSE}
+p <- ggplot(txhousing, aes(date, median)) +
+  geom_line(aes(group = city), alpha = 0.2)
+
+subplot(p, 
+  ggplot(txhousing, aes(date, median)) + geom_hex(), 
+  shareX = TRUE, shareY = TRUE
 )
 ```
 
+<br  /> 
 
-### Dotplots & Error Bars 
+## Density Plot
+```{r}
+kerns <- c("gaussian", "epanechnikov", "rectangular", 
+          "triangular", "biweight", "cosine", "optcosine")
+p <- plot_ly()
+for (k in kerns) {
+  d <- density(txhousing$median, kernel = k, na.rm = TRUE)
+  p <- add_lines(p, x = d$x, y = d$y, name = k)
+}
+layout(p, xaxis = list(title = "Median monthly price"))
+```
 
+<br  /> 
 
-### Line Plots
+## Histogram
+```{r}
+p1 <- plot_ly(diamonds, x = ~price) %>% add_histogram(name = "plotly.js")
 
+price_hist <- function(method = "FD") {
+  h <- hist(diamonds$price, breaks = method, plot = FALSE)
+  plot_ly(x = h$mids, y = h$counts) %>% add_bars(name = method)
+}
 
-### Segments
+subplot(
+  p1, price_hist(), price_hist("Sturges"),  price_hist("Scott"),
+  nrows = 4, shareX = TRUE
+)
+```
 
+<br  /> 
 
-### Ribbons
+## Bar Chart
+```{r}
+p1 <- plot_ly(diamonds, x = ~cut) %>% add_histogram()
 
+p2 <- diamonds %>%
+  dplyr::count(cut) %>%
+  plot_ly(x = ~cut, y = ~n, showlegend=FALSE) %>% 
+  add_bars()
 
-### Polygons
+subplot(p1, p2) 
+```
 
+<br  /> 
 
-### 
+## Box Plot 
 
+```{r}
+d <- diamonds %>%
+  mutate(cc = interaction(clarity, cut))
 
+# interaction levels sorted by median price
+lvls <- d %>%
+  group_by(cc) %>%
+  summarise(m = median(price)) %>%
+  arrange(m) %>%
+  .[["cc"]]
 
+plot_ly(d, x = ~price, y = ~factor(cc, lvls)) %>%
+  add_boxplot(color = ~clarity) %>%
+  layout(yaxis = list(title = ""), margin = list(l = 100))
+```
 
+<br  /> 
 
+## Surface Plot 
+```{r}
+x <- seq_len(nrow(volcano)) + 100
+y <- seq_len(ncol(volcano)) + 500
+plot_ly() %>% add_surface(x = ~x, y = ~y, z = ~volcano)
+```
 
-
-
+<br  /> 
 
 
 
