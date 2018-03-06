@@ -2,7 +2,7 @@
 title: "Biodiversity in U.S. National Parks"
 author: "Fisher Ankney"
 date: "January 18, 2018"
-output: md_document
+output: html_document
 ---
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -27,7 +27,7 @@ library('maps')
    
 Now we must load the dataset, downloaded from:<br  />
 <https://www.kaggle.com/nationalparkservice/park-biodiversity/data>
-```{r message=FALSE, warning=FALSE, cache=TRUE}
+```{r,eval=FALSE}
 setwd("~/Documents/data_science/np_biodiversity")
 parks <- read_csv("input/parks.csv")
 species <- read_csv("input/species.csv")

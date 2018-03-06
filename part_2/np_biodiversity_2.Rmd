@@ -1,0 +1,98 @@
+---
+title: "Biodiversity in the National Parks - Part II"
+author: "Fisher Ankney"
+date: "3/5/2018"
+output: html_document
+---
+
+
+<br> 
+
+```{r, message=FALSE}
+library('tidyverse')
+```
+ 
+<br> 
+
+```{r, message=FALSE}
+parks <- read_csv('input/parks.csv')
+species <- read_csv('input/species.csv')
+```
+
+```{r}
+species_present <- species %>%
+  filter(Occurrence == "Present")
+```
+
+
+<br> 
+
+### What mammals are endangered?
+
+```{r}
+endangered <- species_present %>% 
+  filter(Category == "Mammal" & `Conservation Status` == "Endangered") %>%
+  select(`Common Names`) %>%
+  unique()
+print(endangered, n = 31)
+```
+
+<br> 
+
+not done yet, data entry errors, get rid of doubles 
+```{r}
+endangered <- endangered[-c(1,4,9,13,18,23),]
+print(endangered, n = 25)
+```
+
+<br> 
+
+### Summary statistics on mammals in parks 
+
+- max, min, median, standard deviation <br> 
+- histogram, x axis = num of mammals, y axis = num of parks <br> 
+```{r, warn=FALSE}
+mammal_by_park <- species_present %>%
+  filter(Category == "Mammal") %>% 
+  group_by(`Park Name`) %>% 
+  summarize(num_mammal = n())
+
+ggplot(mammal_by_park) + 
+  geom_bar(aes(num_mammal), binwidth = 5)
+```
+
+```{r}
+range(mammal_by_park$num_mammal)
+
+high_low <- mammal_by_park %>%
+  arrange(num_mammal) 
+high_low[c(1,56),]
+  
+median(mammal_by_park$num_mammal)
+
+species_present %>% 
+  filter(`Park Name` == "Dry Tortugas National Park" & Category == "Mammal") %>%
+  select(`Common Names`)
+
+sd(mammal_by_park$num_mammal)
+```
+<br> 
+
+### Mammal thats in the most number of parks
+
+```{r}
+```
+<br> 
+
+### Are any mammal presense correlated?
+
+<br> 
+
+### Unulate case-study 
+
+
+- the range of each of these mammals according to national park survey
+
+
+
+
