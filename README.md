@@ -34,7 +34,7 @@ Here I'm reading in the biodiversity dataset, again the dataset can be downloade
       coord_quickmap()
     parks_mapped
 
-![](output/ggplot-1.png)
+![](output/ggplot_1.png)
 
 This is just a quick peek at the data. I create a new variable called parks_mapped, first copying the parks dataframe into it, then (%>%) calling a ggplot function. The mappings for this function are Longitude on the X axis, Latitude on the Y axis. Calling the build in borders("states") allows for a map to be projected around these points; unfortunately, the borders function doesn't include Alaska and Hawaii. Next the points are plotted with their size according to how large the parks are in square acres. Coordinates are set to retain the maps ratio, and the parks\_map variable finally plotted.  
 
@@ -64,7 +64,7 @@ Let's cut out Alaska and Hawaii, and spruce up this visualization a little bit.
                              palette="Spectral")
     lower_48_mapped
 
-![]({{ site.baseurl}}/images/np_biodiversity/ggplot-2.png)
+![](output/ggplot-2.png)
 
 To create this map, first filtered out the national parks in Alaska and Hawaii. Then use the same visualization recipe as before, but this time I added in that the color of the points should also be determined by the size of the parks. Next add labels and spruce up the legend and color palette, then plot the new visualization. 
 
@@ -98,7 +98,7 @@ Which states have the most national parks?
       ) + 
       coord_flip()
 
-![]({{ site.baseurl}}/images/np_biodiversity/ggplot-3.png)
+![](output/ggplot-3.png)
 
 Alaska earns the title of "state with the most national parks", or does it? If you look closely California appears twice in the graph, once near the top with seven national parks, but again near the bottom combined with Nevada. California has a grand total of 8 national parks, sharing the top spot with Alaska. It appears twice because in the dataset, the variable \`State\` lists all the states that the national park is in. If the park is exclusively found in California, \`State\` returns CA, if the park is found in more than one state, as is the case with Death Valley, it'll return both states: CA, NV. Yellowstone and Great Smokey Mountain national parks both return multiple states as well. 
 
@@ -142,7 +142,7 @@ Alaska earns the title of "state with the most national parks", or does it? If y
       coord_flip()
 
 
-![]({{ site.baseurl}}/images/np_biodiversity/ggplot-4.png)
+![](output/ggplot-4.png)
 
 Wow, there's a lot going on here! The majority of every national park's plant population is vascular plants, species of flowers, ferns, trees and shrubs and the like. But that's odd, there's a complete lack of fungi, algae, and non-vascular plants in the majority national parks. Surely this isn't correct. The dataset claims that Olympic National Park, has no plant count other than vascular species, even though the park is partially covered in rainforest. 
 
@@ -169,7 +169,7 @@ Rather than being a source of enlightenment on plant biodiversity, this visualiz
       ) + 
       coord_flip()
 
-![]({{ site.baseurl}}/images/np_biodiversity/ggplot-5.png)
+![](output/ggplot-5.png)
 
 Interesting, Grand Canyon National Park has the highest amount of vascular plant biodiversity amoung the parks. This could be true, but it could also be true that because Grand Canyon has been studied so intensely, they have a more detailed and complete survey of vascular plants than any other park. Other high ranking, and high profile parks such as Yosemite, Sequoia, Grand Teton, and Yellowstone add credence to this hypothesis. 
 
@@ -204,7 +204,7 @@ In any case, it's an interesting visualization that gives you an idea on just ho
            y = "Number of Species"
       ) + coord_flip()
 
-![]({{ site.baseurl}}/images/np_biodiversity/ggplot-6.png)
+![](output/ggplot-6.png)
 
 Bird species make up a majority of animal biodiversity in most parks. Parks that are have large bodies of brackish and salt water see large varieties of fish species. Reptiles and amphibians are almost always the clear minority, often times failing to show up on the visualization at all due to their low totals. Mammal biodiversity numbers remain consistent across almost all of the 58 parks. 
 
@@ -244,7 +244,7 @@ I find this visualization much more interesting, and perhaps reliable than the p
                              palette="Spectral")
     animal_biodiv_mapped
 
-![]({{ site.baseurl}}/images/np_biodiversity/ggplot-7.png)
+![](output/ggplot-7.png)
 
 This is a fun plot, there are a lot of conclusions that can be drawn from it, but perhaps I'll let you make your own. I find the variance of animal species between parks that are geographically close to be interesting, but not highly suspicious. 
 
@@ -284,7 +284,7 @@ We've seen which parks are large, and which parks have a large variety of plants
         caption = "source: Kaggle biodiversity dataset"
       )
 
-![]({{ site.baseurl}}/images/np_biodiversity/ggplot-8.png)
+![](output/ggplot-8.png)
 
 Plotting the total number of animal species in a park (x-axis) against the area of the park (y-axis) allows for a scatterplot to reveal any trends relating the two. Each park is an individual point on this chart, the trend line is dotted in black. 
 
