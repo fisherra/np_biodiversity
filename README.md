@@ -1,4 +1,4 @@
-# np_biodiversity
+# Biodiversity in U.S. National Parks
 
 This is a simple exploratory data analysis on the U.S. National Park Biodiversity dataset, sourced from [kaggle](https://www.kaggle.com/nationalparkservice/park-biodiversity/data). I've been using R to investigate scientific problems for a while now, but I'm just starting to use the ggplot2 data visualization package. This is also my first personal data science project with R! I Hope you find it useful none the less.
 
@@ -306,6 +306,8 @@ Again, it is evident that most parks are not behemoths like Gates of the Arctic 
     ## sample estimates:
     ##         cor 
     ## -0.05080241
+
+![](output/animal_biodiv_corr.png)
 
 A Pearson's correlation test between park size and total animal diversity reports a -0.05 correlation coefficient. The catch is that the p-value is extremely high (0.71) and the confidence interval is also enormous. The null hypothesis is incredibly likely to be true, and thus there is likely no correlation between park size, and animal biodiversity. 
 
